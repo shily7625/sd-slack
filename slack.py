@@ -2,7 +2,11 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 class SlackMessageSender:
-    def __init__(self, token = 'xoxb-935003295124-5121080282068-GasP3qfKqFyKL9rjU7mpA0Gs', channel_id = 'CTH07AVK6'):
+    def __init__(self):
+        with open('token.txt', 'r') as f:
+            token = f.readline().strip()
+        with open('channel-id.txt', 'r') as f:
+            channel_id = f.readline().strip()
         self.client = WebClient(token=token)
         self.channel_id = channel_id
         
