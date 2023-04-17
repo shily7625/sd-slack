@@ -299,13 +299,16 @@ def prepare_environment():
     run_pip(f"install -r \"{requirements_file}\"", "requirements for Web UI")
 
     run_extensions_installers(settings_file=args.ui_settings_file)
+    from slack import SlackMessageSender ## channy
+    slack = SlackMessageSender() ## channy
+    slack.send_message("environment preparing start..") ## channy
 
     if args.update_check:
         version_check(commit)
 
     if args.update_all_extensions:
         git_pull_recursive(extensions_dir)
-    
+    slack.send_message("environment preparing done..") ## channy
     if "--exit" in sys.argv:
         print("Exiting because of --exit argument")
         exit(0)
@@ -343,11 +346,15 @@ def tests(test_dir):
 
 
 def start():
+    from slack import SlackMessageSender
+    slack = SlackMessageSender() ## channy
     print(f"Launching {'API server' if '--nowebui' in sys.argv else 'Web UI'} with arguments: {' '.join(sys.argv[1:])}")
     import webui
     if '--nowebui' in sys.argv:
+        slack.send_message("webui start api_only..") ## channy
         webui.api_only()
     else:
+        slack.send_message("webui start gui..") ## channy
         webui.webui()
 
 

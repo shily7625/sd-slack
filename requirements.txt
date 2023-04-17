@@ -31,3 +31,5 @@ torchsde
 safetensors
 psutil
 rich
+slack-sdk
+slack-bolt

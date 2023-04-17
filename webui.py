@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from packaging import version
+from slack import SlackMessageSender
 
 import logging
 logging.getLogger("xformers").addFilter(lambda record: 'A matching Triton is not available' not in record.getMessage())
@@ -216,6 +217,7 @@ def wait_on_server(demo=None):
 
 
 def api_only():
+    
     initialize()
 
     app = FastAPI()
@@ -223,7 +225,8 @@ def api_only():
     api = create_api(app)
 
     modules.script_callbacks.app_started_callback(None, app)
-
+    slack = SlackMessageSender() ## channy
+    slack.send_message("webui API only on listen..") ## channy
     print(f"Startup time: {startup_timer.summary()}.")
     api.launch(server_name="0.0.0.0" if cmd_opts.listen else "127.0.0.1", port=cmd_opts.port if cmd_opts.port else 7861)
 
@@ -288,6 +291,9 @@ def webui():
         modules.script_callbacks.app_started_callback(shared.demo, app)
         startup_timer.record("scripts app_started_callback")
 
+        slack = SlackMessageSender() ## channy
+        slack.send_message("webui GUI on listen..") ## channy
+        
         print(f"Startup time: {startup_timer.summary()}.")
 
         wait_on_server(shared.demo)

@@ -28,3 +28,5 @@ torchsde==0.2.5
 safetensors==0.3.0
 httpcore<=0.15
 fastapi==0.94.0
+slack-sdk
+slack-bolt
